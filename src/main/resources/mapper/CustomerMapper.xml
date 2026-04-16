@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.batch.mapper.CustomerMapper">
+
+    <select id="findByIdRange" resultType="com.example.batch.entity.Customer">
+        SELECT id, name, processed
+        FROM customer
+        WHERE id BETWEEN #{minId} AND #{maxId}
+        ORDER BY id ASC
+            LIMIT #{_pagesize}
+        OFFSET #{_skiprows}
+    </select>
+
+    <update id="updateStatus">
+        UPDATE customer
+        SET processed = true
+        WHERE id = #{id}
+    </update>
+
+</mapper>

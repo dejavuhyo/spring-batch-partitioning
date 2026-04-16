@@ -1,7 +1,7 @@
 # Spring Batch Partitioning
 
 ## 1. 설명
-Java 21의 가상 스레드(Virtual Threads)와 Spring Batch의 파티셔닝(Partitioning) 기법을 결합하여, 대량의 데이터를 저비용 및 고효율로 처리하는 것을 목표로 하는 배치 애플리케이션이다.
+Java 21의 가상 스레드(Virtual Threads)와 Spring Batch의 파티셔닝(Partitioning)을 결합하여, 대량의 데이터를 저비용, 고효율로 처리하는 것을 목표로 하는 배치 애플리케이션이다.
 
 ## 2. 개발환경
 
@@ -44,7 +44,7 @@ Java 21의 가상 스레드(Virtual Threads)와 Spring Batch의 파티셔닝(Par
 ### 1) Database 설정 (PostgreSQL)
 `database/table.sql` 스크립트를 실행하여 필요한 테이블, 인덱스, 트리거를 생성한다.
 
-### 2. 환경 설정 (application.yml)
+### 2) 환경 설정 (application.yml)
 `src/main/resources/application.yml`에서 데이터베이스 연결 정보를 수정한다.
 
 ## 6. 성능 및 최적화 전략

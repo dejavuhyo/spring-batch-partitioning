@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  batch:
+    jdbc:
+      initialize-schema: always # 배치 메타 테이블이 없으면 생성해줌
+    job:
+      enabled: false # 서버 시작 시 자동 실행 방지
+  sql:
+    init:
+      mode: always
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.example.batch.entity
+  configuration:
+    map-underscore-to-camel-case: true # DB 컬럼(user_id)을 자바 필드(userId)로 자동 매핑

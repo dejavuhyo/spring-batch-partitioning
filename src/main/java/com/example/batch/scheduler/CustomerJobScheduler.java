@@ -17,20 +17,44 @@ public class CustomerJobScheduler {
     private final JobLauncher jobLauncher;
     private final Job customerJob;
 
-    // cron 식: 초 분 시 일 월 요일
-    // "*/10 * * * * *" 는 10초마다 실행을 의미합니다.
-    @Scheduled(cron = "*/10 * * * * *")
+    // fixedDelay: 이전 작업이 종료된 시점부터 설정된 시간 후에 다시 실행
+    @Scheduled(fixedDelay = 10000) // 10초(10000ms) 대기
     public void runCustomerJob() {
+        if (Thread.currentThread().isInterrupted()) {
+            return;
+        }
+
         try {
             JobParameters params = new JobParametersBuilder()
-                    .addLong("time", System.currentTimeMillis()) // 중복 실행 방지를 위한 필수 파라미터
+                    .addLong("time", System.currentTimeMillis())
                     .toJobParameters();
 
-            log.info(">>> 10초 주기 배치 시작...");
+            log.info(">>> 배치 실행 시작...");
             jobLauncher.run(customerJob, params);
+            log.info(">>> 배치 실행 완료 (10초 대기 후 재실행).");
 
         } catch (Exception e) {
-            log.error("배치 실행 중 에러 발생: {}", e.getMessage());
+            // 종료 중 발생하는 인터럽트 예외는 무시하거나 간결하게 로그 남김
+            if (isShutdownException(e)) {
+                log.info(">>> 애플리케이션 종료 중 배치가 중단되었습니다.");
+            } else {
+                log.error("배치 실행 중 에러 발생: {}", e.getMessage(), e);
+            }
         }
+    }
+
+    private boolean isShutdownException(Exception e) {
+        Throwable cause = e;
+        while (cause != null) {
+            if (cause instanceof InterruptedException) return true;
+            if (cause.getMessage() != null && (
+                cause.getMessage().contains("Closed by interrupt") || 
+                cause.getMessage().contains("interrupted by signal")
+            )) {
+                return true;
+            }
+            cause = cause.getCause();
+        }
+        return false;
     }
 }

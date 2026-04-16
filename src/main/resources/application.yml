@@ -1,14 +1,23 @@
+server:
+  port: 0
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 30 # 병렬 처리를 위해 커넥션 풀 확대 (Grid Size 고려)
+      minimum-idle: 10
   batch:
     jdbc:
       initialize-schema: always # 배치 메타 테이블이 없으면 생성해줌
     job:
       enabled: false # 서버 시작 시 자동 실행 방지
+  threads:
+    virtual:
+      enabled: true # 가상 스레드 활성화 (Spring Boot 3.2+)
   sql:
     init:
       mode: always

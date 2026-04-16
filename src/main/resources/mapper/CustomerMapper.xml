@@ -3,11 +3,13 @@
 
 <mapper namespace="com.example.batch.mapper.CustomerMapper">
 
-    <select id="findByIdRange" resultType="com.example.batch.entity.Customer">
-        SELECT id, name, processed
+    <select id="findByTimeRange" resultType="com.example.batch.entity.Customer">
+        SELECT id, name, processed, updated_at
         FROM customer
-        WHERE id BETWEEN #{minId} AND #{maxId}
-        ORDER BY id ASC
+        WHERE processed = false
+          AND updated_at &gt;= CAST(#{minTime} AS TIMESTAMP)
+          AND updated_at &lt; CAST(#{maxTime} AS TIMESTAMP)
+        ORDER BY updated_at ASC, id ASC
             LIMIT #{_pagesize}
         OFFSET #{_skiprows}
     </select>
